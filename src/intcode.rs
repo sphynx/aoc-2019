@@ -74,6 +74,10 @@ impl Computer {
         &self.memory
     }
 
+    pub fn last_output(&self) -> &str {
+        &self.output.iter().last().unwrap()
+    }
+
     pub fn run(&mut self) -> &Vec<String> {
         loop {
             match Instruction::from(self.memory[self.ip]) {
