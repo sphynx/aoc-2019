@@ -9,6 +9,8 @@ edition = "2018"
 [dependencies]
 itertools = "0.8.2"
 permutohedron = "0.2"
+log = "0.4"
+env_logger = "0.7"
 
 [dev-dependencies]
 criterion = "0.3"

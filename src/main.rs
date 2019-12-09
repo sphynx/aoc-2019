@@ -1,8 +1,11 @@
 use aoc_2019::*;
+
+use env_logger;
 use std::io;
 
 fn main() -> io::Result<()> {
-    day8::solve_part2();
+    env_logger::init();
+    println!("day 9, part 1: {}", day9::solve_part1());
     Ok(())
 }
 
@@ -56,5 +59,10 @@ mod tests {
     #[test]
     fn day8_solution() {
         assert_eq!(day8::solve_part1(), 1206);
+    }
+
+    #[test]
+    fn day9_solution() {
+        assert_eq!(day9::solve_part1(), 3533056970);
     }
 }
