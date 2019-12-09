@@ -40,16 +40,22 @@ impl Computer {
     where
         P: AsRef<Path>,
     {
+        self.load_memory(Self::read_program(path));
+    }
+
+    pub fn read_program<P>(path: P) -> Vec<i64>
+    where
+        P: AsRef<Path>,
+    {
         let program = fs::read_to_string(path).expect("can't load program");
-        let data: Vec<i64> = program
+        program
             .trim()
             .split(",")
             .map(|x| {
                 x.parse()
                     .expect(format!("can't parse int code in a program: {}", x).as_str())
             })
-            .collect();
-        self.load_memory(data);
+            .collect()
     }
 
     pub fn load_memory<T>(&mut self, mem: T)
