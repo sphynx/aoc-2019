@@ -121,13 +121,10 @@ pub fn solve_part1_with_hashset() -> u32 {
 
     let mut sparse = HashSet::with_capacity(128_000);
     mark_path_with_val_alt(&mut sparse, &frame, &programs[0]);
-    let dist = follow_path_with_min_dist_alt(&mut sparse, &frame, &programs[1]);
-
-    // println!("day 3, part 1: {}", dist);
-    dist
+    follow_path_with_min_dist_alt(&mut sparse, &frame, &programs[1])
 }
 
-pub fn solve_part2() {
+pub fn solve_part2() -> u32 {
     let data = std::fs::read_to_string("input/day3.txt").unwrap();
     let programs: Vec<_> = data.lines().map(mk_program).collect();
 
@@ -135,9 +132,7 @@ pub fn solve_part2() {
     let mut bitmap: Vec<u32> = vec![0; (frame.width * frame.height) as usize];
 
     mark_path_with_dist(&mut bitmap, &frame, &programs[0]);
-    let min_total_steps = follow_path_with_total_steps(&mut bitmap, &frame, &programs[1]);
-
-    println!("day 3, part 2: {}", min_total_steps);
+    follow_path_with_total_steps(&mut bitmap, &frame, &programs[1])
 }
 
 fn mk_program(s: &str) -> Vec<Move> {
@@ -216,7 +211,6 @@ fn mark_path_with_val_alt<'a>(sparse: &mut HashSet<u32>, frame: &Frame, prog: Pr
         }
     }
 }
-
 
 fn mark_path_with_dist<'a>(bitmap: &mut Vec<u32>, frame: &Frame, prog: Program<'a>) {
     let mut curr_x: i32 = 0;
@@ -301,7 +295,11 @@ fn follow_path_with_min_dist<'a>(bitmap: &mut Vec<u8>, frame: &Frame, prog: Prog
     dist
 }
 
-fn follow_path_with_min_dist_alt<'a>(sparse: &mut HashSet<u32>, frame: &Frame, prog: Program<'a>) -> u32 {
+fn follow_path_with_min_dist_alt<'a>(
+    sparse: &mut HashSet<u32>,
+    frame: &Frame,
+    prog: Program<'a>,
+) -> u32 {
     let mut curr_x: i32 = 0;
     let mut curr_y: i32 = 0;
     let mut dist = u32::max_value();
@@ -343,7 +341,6 @@ fn follow_path_with_min_dist_alt<'a>(sparse: &mut HashSet<u32>, frame: &Frame, p
     }
     dist
 }
-
 
 fn follow_path_with_total_steps<'a>(
     bitmap: &mut Vec<u32>,

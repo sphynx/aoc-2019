@@ -17,7 +17,7 @@ impl From<u64> for OpCode {
     }
 }
 
-pub fn solve_part1() {
+pub fn solve_part1() -> u64 {
     let program = fs::read_to_string("input/day2.txt").unwrap();
     let mut codes: Vec<u64> = program
         .trim()
@@ -27,10 +27,10 @@ pub fn solve_part1() {
     codes[1] = 12;
     codes[2] = 2;
     run(&mut codes);
-    println!("day 2, part 1: {}", codes[0]);
+    codes[0]
 }
 
-pub fn solve_part2() {
+pub fn solve_part2() -> u64 {
     let program = fs::read_to_string("input/day2.txt").unwrap();
     let orig_codes: Vec<u64> = program
         .trim()
@@ -49,13 +49,13 @@ pub fn solve_part2() {
             let output = codes[0];
             if output == TARGET {
                 let result = noun * 100 + verb;
-                println!("day 2, part 2: {}", result);
-                return;
+                return result;
             }
         }
     }
-}
 
+    0
+}
 
 fn run(data: &mut Vec<u64>) {
     let mut ip = 0;

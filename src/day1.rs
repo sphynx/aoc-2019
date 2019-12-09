@@ -1,16 +1,13 @@
 use std::fs;
 
-pub fn solve_part1() {
+pub fn solve_part1() -> u64 {
     let input = fs::read_to_string("input/day1.txt").unwrap();
-    let total: u64 = input.lines().map(|x| fuel(x.parse().unwrap())).sum();
-    println!("day 1, part 1: {}", total);
+    input.lines().map(|x| fuel(x.parse().unwrap())).sum()
 }
 
-pub fn solve_part2() {
+pub fn solve_part2() -> u64 {
     let input = fs::read_to_string("input/day1.txt").unwrap();
-    let total: u64 = input.lines().map(|x| total_fuel(x.parse().unwrap())).sum();
-
-    println!("day 1, part 2: {}", total);
+    input.lines().map(|x| total_fuel(x.parse().unwrap())).sum()
 }
 
 fn fuel(mass: u64) -> u64 {

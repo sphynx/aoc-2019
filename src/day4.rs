@@ -1,15 +1,13 @@
-pub fn solve_part1() {
+pub fn solve_part1() -> usize {
     let start = 152085;
     let end = 670283;
-    let answer = (start..=end).filter(is_good).count();
-    println!("day 4, part 1: {}", answer);
+    (start..=end).filter(is_good).count()
 }
 
-pub fn solve_part2() {
+pub fn solve_part2() -> usize {
     let start = 152085;
     let end = 670283;
-    let answer = (start..=end).filter(is_good_2).count();
-    println!("day 4, part 2: {}", answer);
+    (start..=end).filter(is_good_2).count()
 }
 
 fn is_good(cand: &u32) -> bool {

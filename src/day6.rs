@@ -5,19 +5,18 @@ use std::fs;
 
 type OrbitalMap = HashMap<String, Vec<String>>;
 
-pub fn solve_part1() {
+pub fn solve_part1() -> usize {
     let orbital_map_content = fs::read_to_string("input/day6.txt").unwrap();
     let orbital_map = to_directed_graph(&orbital_map_content);
-    println!("day 6 part 1: {}", solve(&orbital_map, "COM"));
+
+    solve(&orbital_map, "COM")
 }
 
-pub fn solve_part2() {
+pub fn solve_part2() -> usize {
     let orbital_map_content = fs::read_to_string("input/day6.txt").unwrap();
     let orbital_map = to_undirected_graph(&orbital_map_content);
-    println!(
-        "day 6 part 2: {}",
-        min_distance(&orbital_map, "YOU", "SAN").unwrap() - 2
-    );
+
+    min_distance(&orbital_map, "YOU", "SAN").unwrap() - 2
 }
 
 fn to_directed_graph(data: &str) -> OrbitalMap {
