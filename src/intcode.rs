@@ -11,7 +11,7 @@ pub struct Computer {
     ip: usize,
     input: Box<dyn BufRead>,
     output: Vec<String>,
-    status: Status,
+    pub status: Status,
 }
 
 #[derive(PartialEq, Eq, Debug)]
