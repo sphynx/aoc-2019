@@ -12,9 +12,9 @@ pub struct Computer {
     memory: Vec<i64>,
     ip: usize,
     rel_base: i64,
-    pub status: Status,
     input: Box<dyn BufRead>,
-    output: Vec<String>,
+    pub output: Vec<String>,
+    pub status: Status,
 }
 
 #[derive(PartialEq, Eq, Debug)]
