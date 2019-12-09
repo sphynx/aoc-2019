@@ -2,26 +2,24 @@ use std::convert::TryFrom;
 use std::fs;
 use std::io;
 use std::io::BufRead;
-use std::io::Write;
 use std::io::BufReader;
-use std::io::BufWriter;
 use std::io::Cursor;
 use std::path::Path;
 
-pub struct Computer<'a> {
+pub struct Computer {
     memory: Vec<i64>,
     ip: usize,
-    input: Box<dyn BufRead + 'a>,
-    output: Box<dyn Write + 'a>,
+    input: Box<dyn BufRead>,
+    output: Vec<String>,
 }
 
-impl<'a> Computer<'a> {
+impl Computer {
     pub fn new() -> Self {
         Computer {
             memory: vec![],
             ip: 0,
             input: Box::new(BufReader::new(io::stdin())),
-            output: Box::new(BufWriter::new(io::stdout())),
+            output: vec![],
         }
     }
 
@@ -36,14 +34,6 @@ impl<'a> Computer<'a> {
     pub fn set_input_lines(&mut self, lines: &[&str]) {
         let vec = lines.join("\n").into_bytes();
         self.set_input(Box::new(BufReader::new(Cursor::new(vec))));
-    }
-
-    pub fn set_output(&mut self, output: Box<dyn Write>) {
-        self.output = output;
-    }
-
-    pub fn capture_output(&mut self, vec: &'a mut Vec<u8>) {
-        self.output = Box::new(vec);
     }
 
     pub fn load_from_file<P>(&mut self, path: P)
@@ -84,7 +74,7 @@ impl<'a> Computer<'a> {
         &self.memory
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self) -> &Vec<String> {
         loop {
             match Instruction::from(self.memory[self.ip]) {
                 Instruction::Add(p1_mode, p2_mode) => {
@@ -113,7 +103,7 @@ impl<'a> Computer<'a> {
 
                 Instruction::Output(p1_mode) => {
                     let param_1 = self.resolve_param(p1_mode, self.memory[self.ip + 1]);
-                    writeln!(self.output, "{}", param_1).unwrap();
+                    self.output.push(format!("{}", param_1));
                     self.ip += 2;
                 }
 
@@ -153,7 +143,9 @@ impl<'a> Computer<'a> {
                     self.ip += 4;
                 }
 
-                Instruction::Stop => break,
+                Instruction::Stop => {
+                    return &self.output;
+                }
             }
         }
     }
