@@ -2,7 +2,7 @@ use aoc_2019::*;
 use std::io;
 
 fn main() -> io::Result<()> {
-    println!("day 8, part 1: {}", day8::solve_part1());
+    day8::solve_part2();
     Ok(())
 }
 
