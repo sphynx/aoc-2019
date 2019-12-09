@@ -11,6 +11,14 @@ pub struct Computer {
     ip: usize,
     input: Box<dyn BufRead>,
     output: Vec<String>,
+    status: Status,
+}
+
+#[derive(PartialEq, Eq, Debug)]
+pub enum Status {
+    RequiresInput,
+    ProducedOutput(i64),
+    Halted,
 }
 
 impl Computer {
@@ -20,15 +28,12 @@ impl Computer {
             ip: 0,
             input: Box::new(BufReader::new(io::stdin())),
             output: vec![],
+            status: Status::Halted,
         }
     }
 
-    pub fn set_input(&mut self, input: Box<dyn BufRead>) {
+    fn set_input(&mut self, input: Box<dyn BufRead>) {
         self.input = input;
-    }
-
-    pub fn set_str_input(&mut self, input_str: &'static str) {
-        self.set_input(Box::new(BufReader::new(input_str.as_bytes())));
     }
 
     pub fn set_input_lines(&mut self, lines: &[&str]) {
@@ -84,7 +89,49 @@ impl Computer {
         &self.output.iter().last().unwrap()
     }
 
-    pub fn run(&mut self) -> &Vec<String> {
+    pub fn send_input(&mut self, input: i64) {
+        assert_eq!(self.status, Status::RequiresInput);
+        let write_addr = self.memory[self.ip + 1] as usize;
+        self.memory[write_addr] = input;
+        self.ip += 2;
+        self.run_as_coroutine();
+    }
+
+    pub fn peek_output(&self) -> Option<i64> {
+        match self.status {
+            Status::ProducedOutput(out) => Some(out),
+            _ => None,
+        }
+    }
+
+    pub fn consume_output(&mut self) -> Option<i64> {
+        let res = self.peek_output();
+        self.run_as_coroutine();
+        return res;
+    }
+
+    pub fn run(&mut self) {
+        self.run_as_coroutine();
+        loop {
+            match self.status {
+                Status::Halted => {
+                    break;
+                }
+                Status::RequiresInput => {
+                    let mut buf = String::new();
+                    self.input.read_line(&mut buf).expect("cannot read line");
+                    let input = buf.trim().parse().expect("cannot parse input");
+                    self.send_input(input);
+                }
+                Status::ProducedOutput(out) => {
+                    self.output.push(format!("{}", out));
+                    self.run_as_coroutine();
+                }
+            }
+        }
+    }
+
+    pub fn run_as_coroutine(&mut self) {
         loop {
             match Instruction::from(self.memory[self.ip]) {
                 Instruction::Add(p1_mode, p2_mode) => {
@@ -104,17 +151,15 @@ impl Computer {
                 }
 
                 Instruction::Input => {
-                    let write_addr = self.memory[self.ip + 1] as usize;
-                    let mut buf = String::new();
-                    self.input.read_line(&mut buf).expect("cannot read line");
-                    self.memory[write_addr] = buf.trim().parse().expect("cannot parse input");
-                    self.ip += 2;
+                    self.status = Status::RequiresInput;
+                    break;
                 }
 
                 Instruction::Output(p1_mode) => {
                     let param_1 = self.resolve_param(p1_mode, self.memory[self.ip + 1]);
-                    self.output.push(format!("{}", param_1));
                     self.ip += 2;
+                    self.status = Status::ProducedOutput(param_1);
+                    break;
                 }
 
                 Instruction::JumpIfTrue(p1_mode, p2_mode) => {
@@ -154,7 +199,8 @@ impl Computer {
                 }
 
                 Instruction::Stop => {
-                    return &self.output;
+                    self.status = Status::Halted;
+                    break;
                 }
             }
         }
