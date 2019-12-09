@@ -2,7 +2,7 @@ use aoc_2019::*;
 use std::io;
 
 fn main() -> io::Result<()> {
-    println!("day 7, part 2: {}", day7::solve_part2());
+    println!("day 8, part 1: {}", day8::solve_part1());
     Ok(())
 }
 
@@ -51,5 +51,10 @@ mod tests {
     fn day7_solution() {
         assert_eq!(day7::solve_part1(), 30940);
         assert_eq!(day7::solve_part2(), 76211147);
+    }
+
+    #[test]
+    fn day8_solution() {
+        assert_eq!(day8::solve_part1(), 1206);
     }
 }
