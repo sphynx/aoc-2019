@@ -5,7 +5,7 @@ use std::io;
 
 fn main() -> io::Result<()> {
     env_logger::init();
-    println!("day 11, part 1: {}", day11::solve_part1());
+    day11::solve_part2();
     Ok(())
 }
 

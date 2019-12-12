@@ -11,6 +11,7 @@ log = "0.4"
 env_logger = "0.7"
 num = "0.2"
 indoc = "0.3"
+image = "0.22"
 
 [dev-dependencies]
 criterion = "0.3"
