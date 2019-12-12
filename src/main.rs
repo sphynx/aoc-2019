@@ -5,7 +5,7 @@ use std::io;
 
 fn main() -> io::Result<()> {
     env_logger::init();
-    println!("day 10, part 1: {}", day10::solve_part1());
+    println!("day 10, part 2: {}", day10::solve_part2());
     Ok(())
 }
 
@@ -70,5 +70,6 @@ mod tests {
     #[test]
     fn day10_solution() {
         assert_eq!(day10::solve_part1(), 221);
+        assert_eq!(day10::solve_part2(), 806);
     }
 }
