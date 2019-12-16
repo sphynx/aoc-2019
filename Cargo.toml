@@ -18,7 +18,7 @@ criterion = "0.3"
 
 ############ For Criterion benchmarks
 [[bench]]
-name = "day9"
+name = "day12"
 harness = false
 
 [lib]
