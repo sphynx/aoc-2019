@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+<head>
+  <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <div>
+    <svg width="1000" height="600">
+      <circle id="c1" r="5" fill="steelblue"/>
+      <circle id="c2" r="5" fill="red"/>
+      <circle id="c3" r="5" fill="green"/>
+      <circle id="c4" r="5" fill="black"/>
+    </svg>
+  </div>
+
+  <script>
+
+    function step(moons) {
+        for (let i = 0; i < moons.length; i++) {
+            for (let j = i + 1; j < moons.length; j++) {
+                apply_gravity(moons[i], moons[j]);
+            }
+        }
+
+        for (moon of moons) {
+            apply_velocity(moon);
+            moon.svg = moon.svg
+                .transition()
+                .duration(30)
+                .attr('cx', moon.coord_x)
+                .attr('cy', moon.coord_y);
+        }
+    }
+
+    function run(moons, iters) {
+        for (let i = 0; i < iters; i++) {
+            step(moons);
+        }
+    }
+
+    function apply_gravity(self, that) {
+        if (self.coord_x < that.coord_x) {
+            self.vel_x += 1;
+            that.vel_x -= 1;
+        } else if (self.coord_x > that.coord_x) {
+            self.vel_x -= 1;
+            that.vel_x += 1;
+        }
+
+        if (self.coord_y < that.coord_y) {
+            self.vel_y += 1;
+            that.vel_y -= 1;
+        } else if (self.coord_y > that.coord_y) {
+            self.vel_y -= 1;
+            that.vel_y += 1;
+        }
+    }
+
+    function apply_velocity(moon) {
+        moon.coord_x += moon.vel_x;
+        moon.coord_y += moon.vel_y;
+    }
+
+    var moon1 = {coord_x: 110, coord_y: 220, vel_x: 0, vel_y: 0, svg: d3.select("#c1")};
+    var moon2 = {coord_x: 170, coord_y: 220, vel_x: 0, vel_y: 0, svg: d3.select("#c2")};
+    var moon3 = {coord_x: 170, coord_y: 250, vel_x: 0, vel_y: 0, svg: d3.select("#c3")};
+    var moon4 = {coord_x: 190, coord_y: 380, vel_x: 0, vel_y: 0, svg: d3.select("#c4")};
+
+    var system = [moon1, moon2, moon3, moon4];
+
+    run(system, 1000);
+
+  </script>
+
+</body>
+</html>
