@@ -81,5 +81,6 @@ mod tests {
     #[test]
     fn day12_solution() {
         assert_eq!(day12::solve_part1(), 7988);
+        assert_eq!(day12::solve_part2(), 337721412394184);
     }
 }
