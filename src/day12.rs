@@ -144,17 +144,17 @@ where
         }
     }
 
-    pub fn cycle_len(&mut self) -> usize {
-        let orig = (*self).clone();
+    pub fn cycle_len(mut self) -> usize {
+        let orig = self.clone();
         let mut counter = 1;
-        loop {
+
+        self.step();
+        while !self.eq(&orig) {
             self.step();
-            if (*self).eq(&orig) {
-                return counter;
-            } else {
-                counter += 1;
-            }
+            counter += 1;
         }
+
+        counter
     }
 }
 
